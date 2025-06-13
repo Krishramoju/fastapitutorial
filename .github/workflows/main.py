@@ -1,20 +1,17 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+import time
 
 app = FastAPI()
 
-class Item(BaseModel):
-    name: str
-    price: float
+def fib(n: int):
+    return n if n <= 1 else fib(n-1) + fib(n-2)
 
-@app.get("/")
-def root():
-    return {"status": "API is working"}
-
-@app.get("/items/{item_id}")
-def get_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "query": q}
-
-@app.post("/items/")
-def create_item(item: Item):
-    return {"received_item": item}
+@app.get("/fib/{n}")
+def get_fib(n: int):
+    start = time.time()
+    result = fib(n)
+    return {
+        "input": n,
+        "result": result,
+        "time_sec": round(time.time() - start, 2)
+    }
